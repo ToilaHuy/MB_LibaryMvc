@@ -1,0 +1,40 @@
+﻿@model IEnumerable<WebApplication8.Data.BorrowingHistory>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    <a asp-action="Create">Borrow</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Borrower)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BorrowDate)
+            </td>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.Borrower.BorrowerName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BorrowingHistoryId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BorrowingHistoryId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BorrowingHistoryId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,84 @@
+﻿@model WebApplication8.Data.BorrowingHistory
+
+@{
+    ViewData["Title"] = "Details";
+    double sum = 0;
+    foreach(var item in Model.HistoryDetails)
+    {
+        Console.WriteLine(item.Cost);
+        sum = sum + item.Cost;
+    }
+  
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>BorrowingHistory</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BorrowDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BorrowDate)
+        </dd>
+    
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Borrower)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Borrower.BorrowerName)
+        </dd>
+        <dt class="col-sm-2">
+             Cost 
+        </dt>
+        <dd class="col-sm-10">
+           $@sum 
+        </dd>
+    </dl>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Author
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Category
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.HistoryDetails)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Item.Author)
+                    </td>
+                    <td>
+                        $@Html.DisplayFor(modelItem =>item.Item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Item.Category)
+                    </td>                                   
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.BorrowingHistoryId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

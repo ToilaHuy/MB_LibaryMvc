@@ -1,0 +1,48 @@
+﻿@model WebApplication8.Models.BorrowingHistoryView
+
+@{
+    ViewData["Title"] = "Create";
+  
+}
+
+<h1>Borrow</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label  class="control-label">Choose Borrower</label>
+
+                <select class="form-control" name="BorrowerId">
+                    @foreach (var item in Model.Borrowers)
+                    {
+                        <option value="@item.BorrowerId">@item.BorrowerName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label  class="control-label"> Slelect Item</label>
+                <select name="ItemId" class="form-control" multiple>
+                    @foreach (var item in Model.Items)
+                    {
+                        <option name="ItemId" value="@item.ItemId">@item.Title - @item.Category</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+          
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
