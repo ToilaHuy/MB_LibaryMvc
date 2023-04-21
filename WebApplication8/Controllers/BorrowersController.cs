@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+
 using Microsoft.EntityFrameworkCore;
 using WebApplication8.Data;
 using WebApplication8.Models;
@@ -24,16 +21,16 @@ namespace WebApplication8.Controllers
         }
 
         // GET: Borrowers
-        public async Task<IActionResult> Index(string name)
+        public IActionResult Index(string name)
         {
               
-            var borrower = _unitOfWork.Borrower.GetAll();
+            var borrower =  _unitOfWork.Borrower.GetAll();
             if (!string.IsNullOrEmpty(name))
             {
-                borrower = _unitOfWork.Borrower.FindAll(b => b.BorrowerName.Contains(name) );
+                borrower =  _unitOfWork.Borrower.FindAll(b => b.BorrowerName.Contains(name) );
             }
             return borrower != null ?
-                        View(borrower) :
+                        View( borrower) :
                         Problem("Entity set 'MyDbContext.Items'  is null.");
         }
 
@@ -61,8 +58,7 @@ namespace WebApplication8.Controllers
         }
 
         // POST: Borrowers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("LibraryCardNumber,BorrowerName,Address")] BorrowerModel borrower)
@@ -95,8 +91,7 @@ namespace WebApplication8.Controllers
         }
 
         // POST: Borrowers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("LibraryCardNumber,BorrowerName,Address")] BorrowerModel borrower)
@@ -123,7 +118,7 @@ namespace WebApplication8.Controllers
         }
 
         // GET: Borrowers/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public IActionResult Delete(Guid? id)
         {
             if (id == null || _unitOfWork.Borrower == null)
             {

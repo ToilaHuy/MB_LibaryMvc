@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+
 using WebApplication8.Data;
 using WebApplication8.Models;
 using WebApplication8.Repositories;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace WebApplication8.Controllers
 {
@@ -88,9 +85,9 @@ namespace WebApplication8.Controllers
         }
 
         //// GET: Items/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public IActionResult Edit(Guid? id)
         {
-            Console.WriteLine(_unitOfWork.Item);
+           
             if (id == null || _unitOfWork.Item == null)
             {
                 return NotFound();
@@ -129,7 +126,7 @@ namespace WebApplication8.Controllers
         }
 
         //// GET: Items/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public IActionResult Delete(Guid? id)
         {
             if (id == null || _unitOfWork.Item == null)
             {
@@ -164,9 +161,6 @@ namespace WebApplication8.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //private bool ItemExists(Guid id)
-        //{
-        //    return (_dbContext.Items?.Any(e => e.ItemId == id)).GetValueOrDefault();
-        //}
+      
     }
 }

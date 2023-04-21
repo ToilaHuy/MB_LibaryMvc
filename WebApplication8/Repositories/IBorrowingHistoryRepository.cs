@@ -8,5 +8,6 @@ namespace WebApplication8.Repositories
    
         public IEnumerable<BorrowingHistory> GetAllBorrowingHistory();
         public BorrowingHistory GetDefaultBorrowingHistory(Guid? id);
+        public void DeleteAllRecordHistory();
     }
 }

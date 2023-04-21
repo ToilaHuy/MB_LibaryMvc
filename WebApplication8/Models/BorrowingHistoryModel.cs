@@ -11,5 +11,6 @@ namespace WebApplication8.Models
         public Guid BorrowerId { set; get; }
         public Borrower? Borrower { set; get; }
         public ICollection<HistoryDetail> HistoryDetails { get; set; }
+
     }
 }

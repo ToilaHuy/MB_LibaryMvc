@@ -6,8 +6,9 @@ namespace WebApplication8.Models
     {
 
         [Required]
-        public List<Guid>? ItemId { set; get; }
+        public List<Guid> ItemId { set; get; }
         [Required]
+
         public Guid BorrowerId { set; get; }
     }
 }
