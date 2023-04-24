@@ -6,11 +6,6 @@
 
 <p class="d-flex justify-content-between">
     <a asp-action="Create" class="btn btn-primary">Borrow</a>
-    
-    @if (Model.Count() > 0)
-    {      
-    <a asp-action="Delete" class="btn btn-primary"> Delete All Record</a>
-    }
 </p>
 @if(Model.Count() == 0)
 {
@@ -41,7 +36,8 @@
                 @Html.DisplayFor(modelItem => item.Borrower.BorrowerName)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.BorrowingHistoryId">Details</a> 
+                <a asp-action="Details" asp-route-id="@item.BorrowingHistoryId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BorrowingHistoryId">Delete</a>
             </td>
         </tr>
 }

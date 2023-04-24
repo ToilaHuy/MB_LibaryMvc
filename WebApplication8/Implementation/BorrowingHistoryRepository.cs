@@ -11,23 +11,30 @@ namespace WebApplication8.Implementation
         public BorrowingHistoryRepository(MyDbContext context) : base(context)
         {  
         }    
-        public  IEnumerable<BorrowingHistory> GetAllBorrowingHistory()
+        public override async Task<IEnumerable<BorrowingHistory>> GetAll()
         {
-            var getBorrowingHistory =  _context.BorrowingHistories.Include(b => b.Borrower).ToList();
-            return getBorrowingHistory;
+            return await _context.BorrowingHistories.Include(b => b.Borrower).ToListAsync();
         }
-        public  BorrowingHistory GetDefaultBorrowingHistory(Guid? id)
+        public override async Task<BorrowingHistory> GetById(Guid id)
         {
-            var getBorrowingHistory =  _context.BorrowingHistories
-                .Include(b => b.Borrower)
-                .Include(b => b.HistoryDetails)
-                .ThenInclude(i => i.Item)
-                .FirstOrDefault(b => b.BorrowingHistoryId == id);
-             return getBorrowingHistory;
+            return await _context.BorrowingHistories
+              .Include(b => b.Borrower)
+              .Include(b => b.HistoryDetails)
+              .ThenInclude(i => i.Item)
+              .FirstOrDefaultAsync(b => b.BorrowingHistoryId == id);
         }
-        public void DeleteAllRecordHistory()
+        public override async Task<bool> Remove(Guid id)
         {
-            _context.BorrowingHistories.RemoveRange(_context.BorrowingHistories);
+            var exist = await _context.BorrowingHistories
+                                .Where(x => x.BorrowingHistoryId == id)                                               
+                                .FirstOrDefaultAsync();
+            if (exist == null) return false;
+
+            _context.BorrowingHistories.Remove(exist);
+            return true;
+
         }
+
+
     }
 }

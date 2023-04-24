@@ -5,15 +5,11 @@ namespace WebApplication8.Models
 {
     public class BorrowingHistoryView
     {
+        [Required]
         public IEnumerable<Item> Items { get; set; }
         public IEnumerable<Borrower> Borrowers { get; set; }
-        public IEnumerable<BorrowingHistory>? BorrowingHistories { get; set; }
-
-        [Required]
-        public List<Guid> ItemId { set; get; }
-        [Required]
-
-        public Guid BorrowerId { set; get; }
-
+        [Required(ErrorMessage = "Please select at least one option")]
+        [MinLength(1)]
+        public List<Guid> ItemId { get; set; }
     }
 }

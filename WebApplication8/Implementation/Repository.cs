@@ -15,51 +15,34 @@ namespace WebApplication8.Implementation
             _context = context;
             entities = context.Set<T>();
         }
-        public void  Add(T entity)
+        public virtual async Task  Add(T entity)
         {   
-            entities.Add(entity);
+            await entities.AddAsync(entity);
+        }
+        public virtual async Task<IEnumerable<T>> FindAll(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        {
+           return await entities.Where(predicate).ToListAsync();
         }
 
-        //public void AddRange(ICollection<T> entities)
-        //{
-        //    entities.AddRange(entities);
-        //}
-
-        public IEnumerable<T> FindAll(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
-           return entities.Where(predicate);
+            return await entities.ToListAsync();    
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual async Task<T> GetById(Guid id)
         {
-            return entities.ToList();
-        }
-
-        public T GetById(int id)
-        {
-            return entities.Find(id);
-        }
-
-        public T GetById(Guid id)
-        {
-            return entities.Find(id);
+            return await entities.FindAsync(id);
 
         }
 
-        public void Remove(T entity)
+        public virtual Task<bool> Remove(Guid id)
         {
-            entities.Remove(entity);
+            throw new NotImplementedException();
         }
 
-        //public void RemoveRange(T entities)
-        //{
-        //    var entity = entities;
-        //    entity.RemoveRange(entity);
-        //}
-
-        public void Update(T entity)
+        public virtual Task<bool> Update(T entity)
         {
-            entities.Update(entity);
+            throw new NotImplementedException();
         }
     }
 

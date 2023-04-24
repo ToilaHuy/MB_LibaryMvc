@@ -21,13 +21,13 @@ namespace WebApplication8.Controllers
         }
 
         // GET: Borrowers
-        public IActionResult Index(string name)
+        public async Task<IActionResult> Index(string name)
         {
               
-            var borrower =  _unitOfWork.Borrower.GetAll();
+            var borrower = await _unitOfWork.Borrower.GetAll();
             if (!string.IsNullOrEmpty(name))
             {
-                borrower =  _unitOfWork.Borrower.FindAll(b => b.BorrowerName.Contains(name) );
+                borrower = await _unitOfWork.Borrower.FindAll(b => b.BorrowerName.Contains(name) );
             }
             return borrower != null ?
                         View( borrower) :
@@ -35,14 +35,14 @@ namespace WebApplication8.Controllers
         }
 
         // GET: Borrowers/Details/5
-        public IActionResult Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _unitOfWork.Borrower == null)
             {
                 return NotFound();
             }
 
-            var borrower = _unitOfWork.Borrower.GetById((Guid)id);
+            var borrower = await _unitOfWork.Borrower.GetById((Guid)id);
             if (borrower == null)
             {
                 return NotFound();
@@ -67,7 +67,7 @@ namespace WebApplication8.Controllers
             if (ModelState.IsValid)
             {
                 borrowerMapper.BorrowerId = Guid.NewGuid();
-                _unitOfWork.Borrower.Add(borrowerMapper);
+                await _unitOfWork.Borrower.Add(borrowerMapper);
                 await _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
@@ -75,14 +75,14 @@ namespace WebApplication8.Controllers
         }
 
         // GET: Borrowers/Edit/5
-        public IActionResult Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || _unitOfWork.Borrower == null)
             {
                 return NotFound();
             }
 
-            var borrower = _unitOfWork.Borrower.GetById((Guid)id);
+            var borrower = await _unitOfWork.Borrower.GetById((Guid)id);
             if (borrower == null)
             {
                 return NotFound();
@@ -105,7 +105,7 @@ namespace WebApplication8.Controllers
                 try
                 {
                    
-                    _unitOfWork.Borrower.Update(borrowerMapper);
+                    await _unitOfWork.Borrower.Update(borrowerMapper);
                     await _unitOfWork.Save();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -118,14 +118,14 @@ namespace WebApplication8.Controllers
         }
 
         // GET: Borrowers/Delete/5
-        public IActionResult Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _unitOfWork.Borrower == null)
             {
                 return NotFound();
             }
 
-            var borrower = _unitOfWork.Borrower.GetById((Guid)id);
+            var borrower =await _unitOfWork.Borrower.GetById((Guid)id);
             if (borrower == null)
             {
                 return NotFound();
@@ -137,18 +137,14 @@ namespace WebApplication8.Controllers
         // POST: Borrowers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid? id)
         {
             if (_unitOfWork.Borrower == null)
             {
                 return Problem("Entity set 'MyDbContext.Borrowers'  is null.");
             }
-            var borrower = _unitOfWork.Borrower.GetById((Guid)id);
-            if (borrower != null)
-            {
-                _unitOfWork.Borrower.Remove(borrower);
-            }
-
+            var delete =  await _unitOfWork.Borrower.Remove((Guid)id);
+            if (!delete) Problem("Cannot delete");
             await _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }

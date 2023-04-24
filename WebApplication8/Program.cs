@@ -15,8 +15,7 @@ builder.Services.AddDbContext<MyDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("AppWvcConnectionString"));
 });
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddTransient<IUnitOfWork , UnitOfWork>();
-
+builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
 
 
 var app = builder.Build();

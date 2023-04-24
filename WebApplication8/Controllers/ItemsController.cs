@@ -25,12 +25,12 @@ namespace WebApplication8.Controllers
         }
 
         // GET: Items
-        public IActionResult Index(string name)
+        public async Task<IActionResult> Index(string name)
         {
-            var item =  _unitOfWork.Item.GetAll();
+            var item = await _unitOfWork.Item.GetAll();
             if (!string.IsNullOrEmpty(name))
             {
-                item = _unitOfWork.Item.FindAll( item => item.Title.Contains(name) || item.Author.Contains(name));
+                item = await _unitOfWork.Item.FindAll( item => item.Title.Contains(name) || item.Author.Contains(name));
             }
             return item != null ?
                         View(item) :
@@ -40,14 +40,14 @@ namespace WebApplication8.Controllers
 
         //GET: Items/Details/5
         
-        public IActionResult Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var item = _unitOfWork.Item.GetById((Guid)id);
+            var item = await _unitOfWork.Item.GetById((Guid)id);
             ViewBag.Category = item.Category;
 
             if (item == null)
@@ -67,7 +67,6 @@ namespace WebApplication8.Controllers
         }
 
         //POST: Items/Create
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ItemId,Title,PublicationDate,Author,Price,NumberOfPages,RunTime,Category")] ItemModel item)
@@ -75,8 +74,7 @@ namespace WebApplication8.Controllers
             var itemMapper = _mapper.Map<Item>(item);
             if (ModelState.IsValid)
             {
-                itemMapper.ItemId = new Guid();
-                 _unitOfWork.Item.Add(itemMapper);
+                 await _unitOfWork.Item.Add(itemMapper);
                  await _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
@@ -85,7 +83,7 @@ namespace WebApplication8.Controllers
         }
 
         //// GET: Items/Edit/5
-        public IActionResult Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
            
             if (id == null || _unitOfWork.Item == null)
@@ -93,7 +91,7 @@ namespace WebApplication8.Controllers
                 return NotFound();
             }
 
-            var item =  _unitOfWork.Item.GetById((Guid)id);
+            var item = await _unitOfWork.Item.GetById((Guid)id);
             if (item == null)
             {
                 return NotFound();
@@ -113,7 +111,7 @@ namespace WebApplication8.Controllers
                 itemMapper.ItemId = id;
                 try
                 {
-                     _unitOfWork.Item.Update(itemMapper);
+                  await _unitOfWork.Item.Update(itemMapper);
                   await _unitOfWork.Save();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -126,14 +124,14 @@ namespace WebApplication8.Controllers
         }
 
         //// GET: Items/Delete/5
-        public IActionResult Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _unitOfWork.Item == null)
             {
                 return NotFound();
             }
 
-            var item = _unitOfWork.Item.GetById((Guid)id);
+            var item = await _unitOfWork.Item.GetById((Guid)id);
             if (item == null)
             {
                 return NotFound();
@@ -141,7 +139,7 @@ namespace WebApplication8.Controllers
 
             return View(item);
         }
-
+ 
         // POST: Items/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -151,16 +149,11 @@ namespace WebApplication8.Controllers
             {
                 return Problem("Entity set 'MyDbContext.Items'  is null.");
             }
-            var item =  _unitOfWork.Item.GetById(id);
-            if (item != null)
-            {
-                _unitOfWork.Item.Remove(item);
-            }
-
+           
+            var delete = await _unitOfWork.Item.Remove(id);
+            if (!delete) Problem("Cannot delete");
             await _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
-        }
-
-      
+        }    
     }
 }

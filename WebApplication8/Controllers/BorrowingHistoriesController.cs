@@ -1,7 +1,7 @@
 ﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-
+using NuGet.Packaging;
 using WebApplication8.Data;
 
 using WebApplication8.Models;
@@ -22,22 +22,22 @@ namespace WebApplication8.Controllers
         }
 
         // GET: BorrowingHistories
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var myDbContext = _unitOfWork.BorrowingHistory.GetAllBorrowingHistory();
+            var myDbContext = await _unitOfWork.BorrowingHistory.GetAll();
             return myDbContext != null ?
                          View(myDbContext) :
                          Problem("Entity set 'MyDbContext.Items'  is null.");
         }
 
         //GET: BorrowingHistories/Details/5
-        public IActionResult Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _unitOfWork.BorrowingHistory == null)
             {
                 return NotFound();
             }
-            var borrowingHistory = _unitOfWork.BorrowingHistory.GetDefaultBorrowingHistory(id);
+            var borrowingHistory =await _unitOfWork.BorrowingHistory.GetById((Guid)id);
             if (borrowingHistory == null)
             {
                 return NotFound();
@@ -46,15 +46,13 @@ namespace WebApplication8.Controllers
         }
 
         //GET: BorrowingHistories/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var viewModel = new BorrowingHistoryView
             {
-                BorrowingHistories = _unitOfWork.BorrowingHistory.GetAll(),
-                Borrowers = _unitOfWork.Borrower.GetAll(),
-                Items = _unitOfWork.Item.GetAll()
+                Borrowers = await _unitOfWork.Borrower.GetAll(),
+                Items =await _unitOfWork.Item.GetAll()
             };
-
             return View(viewModel);
         }
 
@@ -66,46 +64,58 @@ namespace WebApplication8.Controllers
         {
             if (borrowingHistory.ItemId == null)
             {
-                return RedirectToAction(nameof(Create));
+                return RedirectToAction(nameof(Create)); 
             }
-            var borrowingHistoryConvert= _mapper.Map<BorrowingCreate,BorrowingHistory>(borrowingHistory);
+            var borrowingHistoryConvert= _mapper.Map<BorrowingHistory>(borrowingHistory);
             if (ModelState.IsValid)
             {
-                borrowingHistoryConvert.BorrowingHistoryId = Guid.NewGuid();
-                borrowingHistoryConvert.BorrowDate = DateTime.Now;
-                var borrowingHistoryId = borrowingHistoryConvert.BorrowingHistoryId;
-                _unitOfWork.BorrowingHistory.Add(borrowingHistoryConvert);
-                var historyDetail = new HistoryDetail();
-                await _unitOfWork.Save();
+                borrowingHistoryConvert.BorrowDate = DateTime.Now;            
+                borrowingHistoryConvert.HistoryDetails = new List<HistoryDetail>();
                 for (int i = 0; i < borrowingHistory.ItemId.Count; i++)
                 {
-                   var item= _unitOfWork.Item.GetById(borrowingHistory.ItemId[i]);
-                    historyDetail.HistoryDetailId = Guid.NewGuid();
+                    var historyDetail = new HistoryDetail(); 
+                    var item =await _unitOfWork.Item.GetById(borrowingHistory.ItemId[i]);
                     historyDetail.ItemId = borrowingHistory.ItemId[i];
-                    historyDetail.BorrowingHistoryId = borrowingHistoryId;
                     historyDetail.Quantity = 1;
                     historyDetail.Cost = item.Price;
-                    _unitOfWork.HistoryDetail.Add(historyDetail);
-                    await _unitOfWork.Save();
-                }      
+                    borrowingHistoryConvert.HistoryDetails.Add(historyDetail);
+                }
+                await _unitOfWork.BorrowingHistory.Add(borrowingHistoryConvert);
+                await _unitOfWork.Save();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(borrowingHistory);
         }
 
-        public IActionResult Delete()
+        public async Task<IActionResult> Delete(Guid id)
         {
+            if (id == null || _unitOfWork.BorrowingHistory == null)
+            {
+                return NotFound();
+            }
+            var borroweingHistory =await _unitOfWork.BorrowingHistory.GetById(id);
+            if (borroweingHistory == null)
+            {
+                return NotFound();
+            }
             return View();
         }
-        public  async Task<IActionResult> DeleteAccept()
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            Console.WriteLine("dusoethign");
-                _unitOfWork.BorrowingHistory.DeleteAllRecordHistory();
-               await _unitOfWork.Save();
+            if (_unitOfWork.BorrowingHistory == null)
+            {
+                return Problem("Entity set 'MyDbContext.Borrowers'  is null.");
+            }
+            var delete = await _unitOfWork.BorrowingHistory.Remove(id);
+            if(!delete) Problem("Cannot delete");
+            await _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
-      
-
+     
      
     }
 }
