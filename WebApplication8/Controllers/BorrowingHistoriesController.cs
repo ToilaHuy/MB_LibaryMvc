@@ -1,7 +1,6 @@
 ﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Packaging;
 using WebApplication8.Data;
 
 using WebApplication8.Models;
@@ -60,12 +59,11 @@ namespace WebApplication8.Controllers
      
        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BorrowerId,ItemId")] BorrowingCreate borrowingHistory)
+        public async Task<IActionResult> Create([Bind("BorrowerId,ItemId,Quantity")] BorrowingCreate borrowingHistory)
         {
-            if (borrowingHistory.ItemId == null)
-            {
-                return RedirectToAction(nameof(Create)); 
-            }
+           
+            if(borrowingHistory.ItemId == null) return RedirectToAction(nameof(Create));
+            borrowingHistory.Quantity.RemoveAll(item => item == 0);
             var borrowingHistoryConvert= _mapper.Map<BorrowingHistory>(borrowingHistory);
             if (ModelState.IsValid)
             {
@@ -76,8 +74,8 @@ namespace WebApplication8.Controllers
                     var historyDetail = new HistoryDetail(); 
                     var item =await _unitOfWork.Item.GetById(borrowingHistory.ItemId[i]);
                     historyDetail.ItemId = borrowingHistory.ItemId[i];
-                    historyDetail.Quantity = 1;
-                    historyDetail.Cost = item.Price;
+                    historyDetail.Quantity = borrowingHistory.Quantity[i];
+                    historyDetail.Cost = item.Price * borrowingHistory.Quantity[i];
                     borrowingHistoryConvert.HistoryDetails.Add(historyDetail);
                 }
                 await _unitOfWork.BorrowingHistory.Add(borrowingHistoryConvert);
@@ -88,13 +86,13 @@ namespace WebApplication8.Controllers
             return View(borrowingHistory);
         }
 
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _unitOfWork.BorrowingHistory == null)
             {
                 return NotFound();
             }
-            var borroweingHistory =await _unitOfWork.BorrowingHistory.GetById(id);
+            var borroweingHistory =await _unitOfWork.BorrowingHistory.GetById((Guid)id);
             if (borroweingHistory == null)
             {
                 return NotFound();

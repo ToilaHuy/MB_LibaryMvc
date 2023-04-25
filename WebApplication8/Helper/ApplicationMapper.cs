@@ -10,9 +10,6 @@ namespace WebApplication8.Helper
         {
             CreateMap<Item, ItemModel>().ReverseMap();
             CreateMap<Borrower, BorrowerModel>().ReverseMap();
-            CreateMap<BorrowingHistory, BorrowingHistoryModel>().ReverseMap();
-            CreateMap<HistoryDetail, BorrowingHistoryModel>().ReverseMap();
-            CreateMap<Borrower, BorrowingHistoryModel>().ReverseMap();
             CreateMap<BorrowingHistory, BorrowingCreate>().ReverseMap();
         }
     }

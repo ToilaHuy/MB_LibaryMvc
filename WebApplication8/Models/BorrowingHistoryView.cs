@@ -11,5 +11,9 @@ namespace WebApplication8.Models
         [Required(ErrorMessage = "Please select at least one option")]
         [MinLength(1)]
         public List<Guid> ItemId { get; set; }
+        public List<Guid> Quantity { get; set; }
+
+
+
     }
 }

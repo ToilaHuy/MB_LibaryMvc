@@ -26,6 +26,7 @@ namespace WebApplication8.Implementation
             exist.BorrowerName = entity.BorrowerName;
             exist.Address = entity.Address;
             exist.BorrowingHistories = entity.BorrowingHistories;
+         
             return true;
         }
     }

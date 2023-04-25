@@ -50,11 +50,19 @@
                     Author
                 </th>
                 <th>
+                    Category
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
                     Price
                 </th>
                 <th>
-                    Category
+                    Cost
                 </th>
+                
+
                 <th></th>
             </tr>
         </thead>
@@ -69,11 +77,17 @@
                         @Html.DisplayFor(modelItem => item.Item.Author)
                     </td>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Item.Category)
+                    </td>                                   
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
                         $@Html.DisplayFor(modelItem =>item.Item.Price)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Item.Category)
-                    </td>                                   
+                        $@Html.DisplayFor(modelItem =>item.Cost)
+                    </td>
                 </tr>
             }
         </tbody>

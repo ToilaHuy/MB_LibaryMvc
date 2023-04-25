@@ -5,7 +5,6 @@
         IItemRepository Item { get; }
         IBorrowerRepository Borrower { get; }
         IBorrowingHistoryRepository BorrowingHistory { get; }
-        IHistoryDetailRepository HistoryDetail { get; }
         Task<int> Save();
     }
 }

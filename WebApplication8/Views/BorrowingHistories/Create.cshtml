@@ -3,7 +3,10 @@
 
 @{
     ViewData["Title"] = "Create";
-    
+
+    int index = 0;
+    int value = 0;
+
 }
 
 
@@ -11,7 +14,7 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-8">
+    <div class="">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -25,18 +28,24 @@
                 </select>
                 <span asp-validation-for="Borrowers" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label  class="control-label"> Slelect Item</label>
-                <select asp-for="ItemId" name="ItemId" class="form-control" multiple>
+           
+            <div class="form-group" asp-validation-for="ItemId" asp-for="ItemId">
+                <label class="control-label checkbox  " id="@Model.Items.Count()"> Choose Item</label> <br>     
                     @foreach (var item in Model.Items)
                     {
-                        <option  name="ItemId" value="@item.ItemId">@item.Title - @item.Category</option>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <div>
+                            <input type="checkbox" id="@index" name="ItemId" value="@item.ItemId">
+                            <label for="vehicle1"> @item.Title  -  @item.Category </label>
+                        </div>
+                        <input min="0" type="number" class="input " id="input-@index" class="@item.Price" name="Quantity" value="@value">
+                      
+                        </div>                 
+                    index++;                  
                     }
-                </select>   
-          
                 <span asp-validation-for="ItemId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
           
@@ -48,6 +57,41 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+
+    <style>
+        .input{
+            max-height: 24px;
+            width:100px;
+            display:none;
+        }
+    </style>
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+        $(document).ready(function () {
+            const checkboxes = $(".checkbox")[0].id;
+      
+
+            // Lặp qua từng checkbox và bắt trạng thái của nó
+                for (let i = 0; i < checkboxes; i++) {
+                const checkbox = document.getElementById(i);
+                const input = document.getElementById(`input-${i}`);
+                    // Đăng ký sự kiện khi checkbox thay đổi trạng thái
+                checkbox.addEventListener("change", function () {
+                    if (checkbox.checked) {
+                        input.style.display = "inline";
+                        input.value = 1;
+                    } else {
+                        input.style.display = "none";
+                        input.value = 0;
+                    }
+                    })
+                }
+          
+        })
+
+    </script>
 }
