@@ -1,84 +1,144 @@
-﻿@model IEnumerable<WebApplication8.Data.Item>
+﻿@model IEnumerable<WebApplication8.Models.ItemViewModel>
+
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>List Item</h1>
+<div class="d-flex justify-content-between align-item-center">
+    <h1>List Item</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</p>
-<form asp-action="index">
-    <input type="text" name="name" placeholder="search" />
-    <button type="submit">Search</button>
-</form>
+    <div>
+        <button class="btn btn-primary " id="btnLoadPartialCreate">Create New</button>
+    </div>
+</div>
+<input type="text" name="name" placeholder="search" id="searchTerm" />
 
-@if(Model.Count() == 0)
-{
-      <h1>Nothing Show</h1>
-  
-} else
-{   
+<add key="ClientValidationEnabled" value="true" />
+<add key="UnobtrusiveJavaScriptEnabled" value="true" />
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PublicationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfPages)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RunTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PublicationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfPages)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RunTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ItemId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ItemId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ItemId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-}
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Understood</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="staticBackdropCreate" class="modal fade">
+</div>
+<div id="staticBackdropRemove" class="modal fade">
+</div>
+<div class="d-flex mt-2  gap-5 align-items-center flex-wrap">
+    
+ 
+    @foreach (var item in Model)
+    {
+        // var products = item.ItemId;
+        // var itemMapper = mapper.Map<ItemViewModel>(item);
+
+        @* @await Html.PartialAsync("_RemoveItemPartial",  item,  new ViewDataDictionary(ViewData) *@
+        @*                         { *@
+        @*                              { "index", products } *@
+        @*                         }) *@
+        <div class="card text-black " style="width: 18rem; position: relative">
+            <div class="group-svg container-btn-item"  data-id="@item.ItemId" value="@item.ItemId">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" value="@item.ItemId">
+                    <i class="fa-solid fa-pencil"></i>
+                </button>
+                <button type="button" data-id="@item.ItemId" class="btnLoadPartial">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+                <a asp-action="Details" asp-route-id="@item.ItemId">
+                    <img src="@item.ImageUrl" class="card-img-top" alt="...">
+                </a>
+            <div class="card-body">
+                <h5 class="card-title">@item.Title</h5>
+                <p class="card-text">Category: @item.Category</p>
+                <p class="card-text">Author: @item.Author</p>
+                <p class="card-text">Price: @item.Price VNĐ</p>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+<style>
+    .group-svg
+    {
+        position: absolute;
+        right:10px ;
+        top:10px; 
+        display: none;
+        cursor:pointer;
+    }
+
+        .group-svg > button
+        {
+            background-color: transparent;
+            border:none;
+            color: white;
+        }
+    .card:hover > .group-svg {
+        display: block;
+    }
+    
+    .svg 
+    {
+        width: 20px;
+    }
+
+</style>
+
+
+@*@{
+    Html.RenderPartial("_ValidationScriptsPartial");
+}*@
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+        $(document).ready(function () {
+            
+            $(".btnLoadPartial").on("click", async function () {
+                var itemId = $(this).data("id");       
+                // Gọi Ajax để lấy nội dung partial view
+                var result = await $.ajax({
+                    url: "@Url.Action("Delete")",
+                    data: { id: itemId },
+                    type: 'GET'
+                });
+               await $('#staticBackdropRemove').html(result);
+                await $('#staticBackdropRemove').modal('show');
+    
+            });
+
+            $("#btnLoadPartialCreate").on("click", async function () {
+             
+                // Gọi Ajax để lấy nội dung partial view
+            
+                $('#staticBackdropCreate').load("@Url.Action("Create")", function(){
+                    $('#staticBackdropCreate').modal('show');
+                    });
+               
+
+            });
+            
+        });
+    </script>

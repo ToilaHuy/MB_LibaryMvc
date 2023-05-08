@@ -1,7 +1,9 @@
-﻿@model IEnumerable<WebApplication8.Data.Borrower>
-
+﻿@using WebApplication8.Repositories;
+@inject IUnitOfWork UnitOfWork;
+@model IEnumerable<WebApplication8.Models.BorrowerVM>
 @{
     ViewData["Title"] = "Index";
+
 }
 
 <h1>List Borrower</h1>
@@ -10,10 +12,13 @@
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 
 </p>
-<form asp-action="index">
-    <input type="text" name="name" placeholder="search" />
+
+@using (Html.BeginForm("index", "Borrowers", FormMethod.Get, new { @class = "form-class" }))
+{
+    @Html.TextBox("name")
     <button type="submit">Search</button>
-</form>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -27,7 +32,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in await UnitOfWork.Borrower.GetAll()) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.BorrowerName)

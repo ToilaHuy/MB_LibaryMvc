@@ -15,7 +15,7 @@ namespace WebApplication8.Implementation
         {
             return await _context.BorrowingHistories.Include(b => b.Borrower).ToListAsync();
         }
-        public override async Task<BorrowingHistory> GetById(Guid id)
+        public override async Task<BorrowingHistory> GetById(int id)
         {
             return await _context.BorrowingHistories
               .Include(b => b.Borrower)
@@ -23,7 +23,7 @@ namespace WebApplication8.Implementation
               .ThenInclude(i => i.Item)
               .FirstOrDefaultAsync(b => b.BorrowingHistoryId == id);
         }
-        public override async Task<bool> Remove(Guid id)
+        public override async Task<bool> Remove(int id)
         {
             var exist = await _context.BorrowingHistories
                                 .Where(x => x.BorrowingHistoryId == id)                                               

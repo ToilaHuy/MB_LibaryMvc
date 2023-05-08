@@ -1,0 +1,82 @@
+﻿@model WebApplication8.Models.ItemVMCreate
+@using (Html.BeginForm("Create", "Items", FormMethod.Post, new { enctype = "multipart/form-data", @id="form-test" }))
+{
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Create Item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Category, htmlAttributes: new { @class = "control-label" })
+                    @Html.DropDownList("Category", null, htmlAttributes: new { @class = "form-control", @id = "Category-list" })
+                    @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PublicationDate, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.PublicationDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PublicationDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Author, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Author, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Author, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group" id="NumberOfPages">
+                    @Html.LabelFor(model => model.NumberOfPages, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.NumberOfPages, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.NumberOfPages, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group" id="RunTime">
+                    @Html.LabelFor(model => model.RunTime, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.RunTime, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.RunTime, "", new { @class = "text-danger" })
+
+                </div>
+
+                @* <div class="form-group" id="FileUpload"> *@
+                @*     <label asp-for="FileUpload" ></label> *@
+                @*     <input asp-for="FileUpload" type="file" class="form-control" /> *@
+                @*     <span asp-validation-for="FileUpload" class="text-danger"></span> *@
+                @* </div> *@
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FileUpload, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.FileUpload, new { type = "file", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.FileUpload, "", new { @class = "text-danger" })
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="form-group mt-2">
+                    <input type="submit" value="Create" class="btn btn-primary"/>
+                </div>
+                @* <button type="button" class="btn btn-primary btnRemove" data-id="@Model.ItemId">Delete</button> *@
+                @* <form asp-action="Delete"> *@
+                @*     <input type="hidden" asp-for="@Model.ItemId" name="ItemId" /> *@
+                @*     <input  type="submit" value="Delete" class="btn btn-danger" /> *@
+                @* </form> *@
+            </div>
+
+        </div>
+    </div>
+
+}

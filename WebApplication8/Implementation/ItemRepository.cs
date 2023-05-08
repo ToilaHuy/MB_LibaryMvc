@@ -8,7 +8,7 @@ namespace WebApplication8.Implementation
     {
         public ItemRepository(MyDbContext context) : base(context) { }
 
-        public override async Task<bool> Remove(Guid id)
+        public override async Task<bool> Remove(int id)
         {
             var exist = await _context.Items
                                 .Where(x => x.ItemId == id)

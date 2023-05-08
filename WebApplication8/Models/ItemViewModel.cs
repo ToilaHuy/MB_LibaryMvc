@@ -1,9 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CloudinaryDotNet.Actions;
+using System.ComponentModel.DataAnnotations;
 using static WebApplication8.Data.Item;
 
 namespace WebApplication8.Models
 {
-    public class ItemModel
+    public class ItemViewModel: ItemVMCreate
+    {
+        public int ItemId { get; set; }
+        public string ImageUrl { get; set; }
+
+    }
+    public class ItemVMCreate
     {
         [Required]
         [StringLength(200)]
@@ -17,5 +24,6 @@ namespace WebApplication8.Models
         public int? NumberOfPages { get; set; }
         public string? RunTime { get; set; }
         public CategoryName Category { get; set; }
+        public IFormFile FileUpload { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace WebApplication8.Implementation
     public class BorrowerRepository : Repository<Borrower>, IBorrowerRepository
     {
         public BorrowerRepository(MyDbContext context) : base(context) { }
-        public override async Task<bool> Remove(Guid id)
+        public override async Task<bool> Remove(int id)
         {
             var exist = await _context.Borrowers
                                 .Where(x => x.BorrowerId == id)

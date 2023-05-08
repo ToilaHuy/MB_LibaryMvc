@@ -26,16 +26,17 @@ namespace WebApplication8.Implementation
 
         public virtual async Task<IEnumerable<T>> GetAll()
         {
+
             return await entities.ToListAsync();    
         }
 
-        public virtual async Task<T> GetById(Guid id)
+        public virtual async Task<T> GetById(int id)
         {
             return await entities.FindAsync(id);
 
         }
 
-        public virtual Task<bool> Remove(Guid id)
+        public virtual Task<bool> Remove(int id)
         {
             throw new NotImplementedException();
         }

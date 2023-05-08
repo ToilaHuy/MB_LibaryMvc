@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplication8.Data.BorrowingHistory>
+﻿@model IEnumerable<WebApplication8.Models.BorrowingHistoryVMIndex>
 
 @{
     ViewData["Title"] = "Index";
@@ -33,7 +33,7 @@
             </td>
           
             <td>
-                @Html.DisplayFor(modelItem => item.Borrower.BorrowerName)
+                @Html.DisplayFor(modelItem => item.Borrower)
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.BorrowingHistoryId">Details</a> |

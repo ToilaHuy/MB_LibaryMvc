@@ -1,11 +1,11 @@
-﻿@model WebApplication8.Models.BorrowingHistoryView
+﻿@model WebApplication8.Models.BorrowingHistoryVMCreate
 
 
 @{
     ViewData["Title"] = "Create";
 
-    int index = 0;
-    int value = 0;
+//<span asp-validation-for="ItemId" class="text-danger"></span>
+    //<span asp-validation-for="Borrowers" class="text-danger"></span>
 
 }
 
@@ -17,39 +17,26 @@
     <div class="">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group col-4">
                 <label  class="control-label">Choose Borrower</label>
 
-                <select class="form-control" name="BorrowerId">
-                    @foreach (var item in Model.Borrowers)
-                    {
-                        <option name="BorrowerId" value="@item.BorrowerId">@item.BorrowerName</option>
-                    }
-                </select>
-                <span asp-validation-for="Borrowers" class="text-danger"></span>
-            </div>
-           
-            <div class="form-group" asp-validation-for="ItemId" asp-for="ItemId">
-                <label class="control-label checkbox  " id="@Model.Items.Count()"> Choose Item</label> <br>     
-                    @foreach (var item in Model.Items)
-                    {
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <div>
-                            <input type="checkbox" id="@index" name="ItemId" value="@item.ItemId">
-                            <label for="vehicle1"> @item.Title  -  @item.Category </label>
-                        </div>
-                        <input min="0" type="number" class="input " id="input-@index" class="@item.Price" name="Quantity" value="@value">
-                      
-                        </div>                 
-                    index++;                  
-                    }
-                <span asp-validation-for="ItemId" class="text-danger"></span>
+              
+                @Html.DropDownListFor(m => m.BorrowerId,
+                new SelectList(Model.Borrowers, "BorrowerId", "BorrowerName"),
+                "-- Select a borrower --",
+                new { @class = "form-control" })
+               
             </div>
             <div class="form-group mt-2">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
           
         </form>
+       
+
+    
+
+       
     </div>
 </div>
 
@@ -71,27 +58,33 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
 
-        $(document).ready(function () {
-            const checkboxes = $(".checkbox")[0].id;
+        //$(document).ready(function () {
+        //    const checkboxes = $(".checkbox")[0].id;
       
 
-            // Lặp qua từng checkbox và bắt trạng thái của nó
-                for (let i = 0; i < checkboxes; i++) {
-                const checkbox = document.getElementById(i);
-                const input = document.getElementById(`input-${i}`);
-                    // Đăng ký sự kiện khi checkbox thay đổi trạng thái
-                checkbox.addEventListener("change", function () {
-                    if (checkbox.checked) {
-                        input.style.display = "inline";
-                        input.value = 1;
-                    } else {
-                        input.style.display = "none";
-                        input.value = 0;
-                    }
-                    })
-                }
+        //     Lặp qua từng checkbox và bắt trạng thái của nó
+        //        for (let i = 0; i < checkboxes; i++) {
+        //        const checkbox = document.getElementById(i);
+        //        const inputQuantity = document.getElementById(`input-${i}`);
+        //        const inputPrice = document.getElementById(`item-price-${i}`);
+                
+        //             Đăng ký sự kiện khi checkbox thay đổi trạng thái
+        //        checkbox.addEventListener("change", function () {
+        //            if (checkbox.checked) {
+        //                inputQuantity.style.display = "inline";
+        //                inputQuantity.value = 1;
+        //                inputQuantity.name = "Quantity";
+        //                inputPrice.checked = true;
+        //            } else {
+        //                inputQuantity.style.display = "none";
+        //                inputQuantity.value = 0;
+        //                inputQuantity.name = "";
+        //                inputQuantity.ariaDisabled = true;
+        //            }
+        //            })
+        //        }
           
-        })
+        //})
 
     </script>
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApplication8.Migrations
 {
     /// <inheritdoc />
-    public partial class firstData : Migration
+    public partial class First : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,9 +15,10 @@ namespace WebApplication8.Migrations
                 name: "Borrowers",
                 columns: table => new
                 {
-                    BorrowerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BorrowerId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     BorrowerName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,7 +29,8 @@ namespace WebApplication8.Migrations
                 name: "Items",
                 columns: table => new
                 {
-                    ItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ItemId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     PublicationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -46,9 +48,10 @@ namespace WebApplication8.Migrations
                 name: "BorrowingHistories",
                 columns: table => new
                 {
-                    BorrowingHistoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BorrowingHistoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     BorrowDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BorrowerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    BorrowerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -65,9 +68,10 @@ namespace WebApplication8.Migrations
                 name: "HistoryDetail",
                 columns: table => new
                 {
-                    HistoryDetailId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BorrowingHistoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    HistoryDetailId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    BorrowingHistoryId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Cost = table.Column<double>(type: "float", nullable: false)
                 },

@@ -12,8 +12,8 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230420091011_firstData")]
-    partial class firstData
+    [Migration("20230504090855_addImage")]
+    partial class addImage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,12 +27,13 @@ namespace WebApplication8.Migrations
 
             modelBuilder.Entity("WebApplication8.Data.Borrower", b =>
                 {
-                    b.Property<Guid>("BorrowerId")
+                    b.Property<int>("BorrowerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BorrowerId"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BorrowerName")
@@ -47,15 +48,17 @@ namespace WebApplication8.Migrations
 
             modelBuilder.Entity("WebApplication8.Data.BorrowingHistory", b =>
                 {
-                    b.Property<Guid>("BorrowingHistoryId")
+                    b.Property<int>("BorrowingHistoryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BorrowingHistoryId"));
 
                     b.Property<DateTime>("BorrowDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("BorrowerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("BorrowerId")
+                        .HasColumnType("int");
 
                     b.HasKey("BorrowingHistoryId");
 
@@ -66,18 +69,20 @@ namespace WebApplication8.Migrations
 
             modelBuilder.Entity("WebApplication8.Data.HistoryDetail", b =>
                 {
-                    b.Property<Guid>("HistoryDetailId")
+                    b.Property<int>("HistoryDetailId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("BorrowingHistoryId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistoryDetailId"));
+
+                    b.Property<int>("BorrowingHistoryId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("ItemId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -93,9 +98,11 @@ namespace WebApplication8.Migrations
 
             modelBuilder.Entity("WebApplication8.Data.Item", b =>
                 {
-                    b.Property<Guid>("ItemId")
+                    b.Property<int>("ItemId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
 
                     b.Property<string>("Author")
                         .IsRequired()
@@ -103,6 +110,9 @@ namespace WebApplication8.Migrations
 
                     b.Property<int>("Category")
                         .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("NumberOfPages")
                         .HasColumnType("int");

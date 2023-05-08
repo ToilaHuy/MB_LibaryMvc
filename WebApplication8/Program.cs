@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication8.Repositories;
 using WebApplication8.Data;
 using WebApplication8.Implementation;
+using WebApplication8.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<MyDbContext>(option =>
 });
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+
 
 
 var app = builder.Build();

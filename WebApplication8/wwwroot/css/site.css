@@ -19,26 +19,12 @@ html {
 
 body {
     margin-bottom: 60px;
-    background: linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.2)),linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.2)),#181d2d !important;
-    --tw-text-opacity: 1;
-    color: rgb(255 255 255/var(--tw-text-opacity)) !important;
+
    
 }
-.table {
-    --tw-text-opacity: 1;
-    color: rgb(255 255 255/var(--tw-text-opacity)) !important;
-}
-.app-background {
-    --tw-bg-opacity: 1;
-    -webkit-animation: slide 2s linear infinite;
-    animation: slide 4s linear infinite;
-    background-color: rgb(17 24 39/var(--tw-bg-opacity));
-    background-image: radial-gradient(hsla(0,0%,84%,.25) 1px,transparent 0),radial-gradient(hsla(0,0%,84%,.1) 1px,transparent 0);
-    background-position: 0 0,25px 25px;
-    background-size: 50px 50px;
-    min-height: 100vh;
-    width: 100%;
-}
+
+
+
 @keyframes slide {
     to {
         background-position: 50px 0,125px 25px
@@ -46,8 +32,7 @@ body {
 }
 a {
     text-decoration: none;
-    --tw-text-opacity: 1;
-    color: rgb(255 255 255/var(--tw-text-opacity));
+  
 }
 input:focus {
     outline: none !important;

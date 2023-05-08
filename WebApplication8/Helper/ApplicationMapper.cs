@@ -8,9 +8,23 @@ namespace WebApplication8.Helper
     {
         public ApplicationMapper()
         {
-            CreateMap<Item, ItemModel>().ReverseMap();
-            CreateMap<Borrower, BorrowerModel>().ReverseMap();
-            CreateMap<BorrowingHistory, BorrowingCreate>().ReverseMap();
+            CreateMap<Item, ItemViewModel>().ReverseMap();
+            CreateMap<Item, ItemVMCreate>().ReverseMap();
+
+            CreateMap<Borrower, BorrowerVMCreate>().ReverseMap();
+            CreateMap<Borrower, BorrowerVM>().ReverseMap();
+
+            CreateMap<BorrowingHistory, BorrowingHistoryCreate>().ReverseMap();
+            CreateMap<BorrowingHistory, BorrowingHistoryVM>().ReverseMap();
+
+
+            CreateMap<BorrowingHistory, BorrowingHistoryVMIndex>()
+                //.ForMember(x => x.BorrowingHistoryId,y => y.MapFrom(z => z.BorrowingHistoryId))
+                .ForMember(x => x.Borrower, y => y.MapFrom(z => z.Borrower.BorrowerName));
+
+            
+             
+
         }
     }
 }

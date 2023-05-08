@@ -17,20 +17,20 @@ namespace WebApplication8.Data
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
-            modelBuilder.Entity<HistoryDetail>(entity =>
-            {
-                entity.HasOne(b => b.BorrowingHistory)
-                    .WithMany(b => b.HistoryDetails)
-                    .HasForeignKey(b => b.BorrowingHistoryId);
-                entity.HasOne(b => b.Item)
-                    .WithMany(b => b.HistoryDetails)
-                    .HasForeignKey(b => b.ItemId);
-            });
-            modelBuilder.Entity<BorrowingHistory>()
-                .HasOne(b => b.Borrower)
-                .WithMany(b => b.BorrowingHistories)
-                .HasForeignKey(b => b.BorrowerId);
+
+            //modelBuilder.Entity<HistoryDetail>(entity =>
+            //{
+            //    entity.HasOne(b => b.BorrowingHistory)
+            //        .WithMany(b => b.HistoryDetails)
+            //        .HasForeignKey(b => b.BorrowingHistoryId);
+            //    entity.HasOne(b => b.Item)
+            //        .WithMany(b => b.HistoryDetails)
+            //        .HasForeignKey(b => b.ItemId);
+            //});
+            //modelBuilder.Entity<BorrowingHistory>()
+            //    .HasOne(b => b.Borrower)
+            //    .WithMany(b => b.BorrowingHistories)
+            //    .HasForeignKey(b => b.BorrowerId);
         }
         
 

@@ -7,37 +7,33 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplication8.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h784FVZ83ERnU2m0vG8Jd4f5BqN9tFoliWBR" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h784FVZ83ERnU2m0vG8Jd4f5BqN9tFoliWBR" crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="app-background">
         <header>
             <nav class=" navbar navbar-expand-sm navbar-toggleable-sm  mb-3">
-                <div class="container-fluid">
+                <div class="container-fluid  ">
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Huy</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                   
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
 
                             <li class="nav-item">
-                                <a class="nav-link text-light " asp-area="" asp-controller="Items" asp-action="Index">List Item</a>
+                                <a class="nav-link text-dark " asp-area="" asp-controller="Items" asp-action="Index">ListItem</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Borrowers" asp-action="Index">Borrowers</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Borrowers" asp-action="Index">Borrowers</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="BorrowingHistories" asp-action="Index">History</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="BorrowingHistories" asp-action="Index">History</a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
+
         </header>
         <div class="container ">
             <main role="main" class="pb-3 ">
