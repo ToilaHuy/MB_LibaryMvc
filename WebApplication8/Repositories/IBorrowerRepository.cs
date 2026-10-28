@@ -2,7 +2,7 @@
 
 namespace WebApplication8.Repositories
 {
-    public interface IBorrowerRepository: IRepository<Borrower>
+    public interface IBorrowerRepository : IRepository<Borrower>
     {
     }
 }

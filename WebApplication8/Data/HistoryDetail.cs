@@ -6,13 +6,15 @@ namespace WebApplication8.Data
     {
         [Key]
 
-        public Guid HistoryDetailId { get; set; }
-        public Guid ItemId { get; set; }
-        public Guid BorrowingHistoryId { get; set; }
+        public int HistoryDetailId { get; set; }
+        public int ItemId { get; set; }
+        public int BorrowingHistoryId { get; set; }
         public BorrowingHistory BorrowingHistory { get; set; }
         public Item Item { get; set; }
         public int Quantity { get; set; }
         public double Cost { get; set; }
+        public bool Status { get; set; } = true;
+
 
 
 

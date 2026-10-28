@@ -1,0 +1,28 @@
+﻿@model WebApplication8.Models.BorrowingHistoryVm
+
+@{
+    var idBorrowingHistory = ViewBag.idBorrowingHistory;
+    var idHistoryDetails = ViewBag.idHistoryDetails;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Are you sure you want to return this?</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            @* <h5 class="card-title">@Model.BorrowerName</h5> *@
+        </div>
+        <div class="modal-footer">
+            <form asp-action="ReturnItem">
+                <input type="hidden" asp-for="@idBorrowingHistory" name="idBorrowingHistory" />
+                <input type="hidden" asp-for="@idHistoryDetails" name="idHistoryDetails" />
+
+                <input  type="submit" value="return" class="btn btn-danger" />
+            </form>
+        </div>
+    </div>
+</div>
+
+

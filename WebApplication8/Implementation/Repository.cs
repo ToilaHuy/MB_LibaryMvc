@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging;
 using WebApplication8.Data;
 using WebApplication8.Repositories;
 
@@ -15,51 +14,35 @@ namespace WebApplication8.Implementation
             _context = context;
             entities = context.Set<T>();
         }
-        public void  Add(T entity)
-        {   
-            entities.Add(entity);
+        public virtual async Task Add(T entity)
+        {
+            await entities.AddAsync(entity);
+        }
+        public virtual async Task<IQueryable<T>> FindAll(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        {
+            return entities.Where(predicate).AsQueryable();
         }
 
-        //public void AddRange(ICollection<T> entities)
-        //{
-        //    entities.AddRange(entities);
-        //}
-
-        public IEnumerable<T> FindAll(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
-           return entities.Where(predicate);
+
+            return await entities.ToListAsync();
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual async Task<T> GetById(int id)
         {
-            return entities.ToList();
-        }
-
-        public T GetById(int id)
-        {
-            return entities.Find(id);
-        }
-
-        public T GetById(Guid id)
-        {
-            return entities.Find(id);
+            return await entities.FindAsync(id);
 
         }
 
-        public void Remove(T entity)
+        public virtual Task<bool> Remove(int id)
         {
-            entities.Remove(entity);
+            throw new NotImplementedException();
         }
 
-        //public void RemoveRange(T entities)
-        //{
-        //    var entity = entities;
-        //    entity.RemoveRange(entity);
-        //}
-
-        public void Update(T entity)
+        public virtual Task<bool> Update(T entity)
         {
-            entities.Update(entity);
+            throw new NotImplementedException();
         }
     }
 

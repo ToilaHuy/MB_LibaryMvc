@@ -1,0 +1,136 @@
+﻿@model WebApplication8.Models.ItemViewModel
+@using (Html.BeginForm("Edit", "Items", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form-items" }))
+{
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Create Item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                @Html.HiddenFor(model =>model.ItemId)
+                @Html.HiddenFor(model =>model.ImageUrl)
+                @Html.HiddenFor(model =>model.AvailableQuantity)
+                @Html.HiddenFor(model =>model.Quantity)
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Category, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Category, new { htmlAttributes = new { @class = "form-control" ,@disabled = "disabled" } })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PublicationDate, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.PublicationDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PublicationDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Author, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Author, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Author, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+               
+                </div>
+            @if (Model.Category.ToString() == "Book")
+            {
+                <div class="form-group" id="NumberOfPages">
+                    @Html.LabelFor(model => model.NumberOfPages, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.NumberOfPages, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.NumberOfPages, "", new { @class = "text-danger" })
+                </div>
+            }
+            @if (Model.Category.ToString() == "DVD")
+            {
+                <div class="form-group" id="RunTime">
+                    @Html.LabelFor(model => model.RunTime, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.RunTime, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.RunTime, "", new { @class = "text-danger" })
+
+                </div>
+            }
+                <div class="form-group" id="Quantity" >
+                    @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" ,@disabled = "disabled" } })
+                   
+
+                </div>
+
+                @* <div class="form-group"> *@
+                @*     @Html.LabelFor(m => m.FileUpload, new { @class = "control-label" }) *@
+                @*     @Html.TextBoxFor(m => m.FileUpload, new { type = "file", @class = "form-control" }) *@
+                @*     @Html.ValidationMessageFor(m => m.FileUpload, "", new { @class = "text-danger" }) *@
+                @* *@
+                @* </div> *@
+            </div>
+            <div class="modal-footer  ">
+               
+                    <div class="form-group  btn-submit">
+                        <input type="submit" value="Accept" class="btn btn-primary"/>
+                    </div>
+                    <button class="btn btn-secondary btn-loading" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                
+
+            </div>
+
+        </div>
+    </div>
+
+}
+
+<script>
+
+
+    $(document).ready(function () {
+        $('.btn-loading').hide();
+        var selectedValue = "Book"
+        if (selectedValue === "Book") {
+            $('#RunTime').css("display", "none");
+            $('#NumberOfPages').css("display", "block");
+
+        }
+        $('#Category-list').change(function () {
+            selectedValue = $(this).val();
+            if (selectedValue === "Book") {
+                $('#RunTime').css("display", "none");
+                $('#NumberOfPages').css("display", "block");
+
+            }
+            else if (selectedValue === "DVD") {
+                $('#NumberOfPages').css("display", "none");
+                $('#RunTime').css("display", "Block");
+
+            } else {
+                $('#RunTime').css("display", "none");
+                $('#NumberOfPages').css("display", "none");
+            }
+        });
+
+     
+
+        $('#form-items').submit(function () {
+
+            if ($('#form-items').valid()) {
+
+                $('.btn-loading').show();
+                $('.btn-submit').hide();
+
+            }
+
+        });
+        $('#form-items').validate($.validator.unobtrusive.parse(document));
+    })
+
+</script>

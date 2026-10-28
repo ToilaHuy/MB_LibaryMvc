@@ -5,11 +5,15 @@ namespace WebApplication8.Data
     public class BorrowingHistory
     {
         [Key]
-        public Guid BorrowingHistoryId { get; set; }
+        public int BorrowingHistoryId { get; set; }
         public DateTime BorrowDate { get; set; }
-        public Guid BorrowerId { set; get; }
-        public Borrower? Borrower { set; get; }
+        [Required]
+        public int BorrowerId { set; get; }
+        public int Quantity { get; set; }
+        public double Cost { get; set; }
+        public Borrower Borrower { set; get; }
         public ICollection<HistoryDetail> HistoryDetails { get; set; }
+        public bool Status { get; set; } = true;
 
     }
 }

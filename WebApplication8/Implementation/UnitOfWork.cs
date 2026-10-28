@@ -7,13 +7,12 @@ namespace WebApplication8.Implementation
     {
         private readonly MyDbContext _context;
 
-        public UnitOfWork(MyDbContext context) 
+        public UnitOfWork(MyDbContext context)
         {
             _context = context;
             Item = new ItemRepository(_context);
             Borrower = new BorrowerRepository(_context);
             BorrowingHistory = new BorrowingHistoryRepository(_context);
-            HistoryDetail = new HistoryDetailRepository(_context);
 
         }
 
@@ -22,7 +21,6 @@ namespace WebApplication8.Implementation
         public IBorrowerRepository Borrower { get; private set; }
 
         public IBorrowingHistoryRepository BorrowingHistory { get; private set; }
-        public IHistoryDetailRepository HistoryDetail { get; private set; }
 
         public async Task<int> Save()
         {
@@ -30,10 +28,10 @@ namespace WebApplication8.Implementation
         }
         public void Dispose()
         {
-            _context.Dispose();
+           _context.Dispose();
         }
 
-      
+
 
     }
 }

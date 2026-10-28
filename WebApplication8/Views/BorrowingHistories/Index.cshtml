@@ -1,24 +1,43 @@
-﻿@model IEnumerable<WebApplication8.Data.BorrowingHistory>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<WebApplication8.Models.BorrowingHistoryVmIndex>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "History";
+    
 }
 
-<p class="d-flex justify-content-between">
-    <a asp-action="Create" class="btn btn-primary">Borrow</a>
-    
-    @if (Model.Count() > 0)
-    {      
-    <a asp-action="Delete" class="btn btn-primary"> Delete All Record</a>
-    }
-</p>
-@if(Model.Count() == 0)
+@using (Html.BeginForm("Index", "BorrowingHistories", FormMethod.Get, new { @id="myForm-history",@class = "form-class" }))
 {
-      <h1>Nothing Show</h1>
-  
-} else
-{   
-<table class="table">
+    <div class="d-flex gap-1 align-items-center ">
+        @Html.TextBox("search" ,"",new
+            { style="max-width:20%", @class="form-control rounded-pill border-0 text-white", placeholder="Search....."})
+        
+        @Html.TextBox("date" ,"",new
+        {style="max-width:20%", @class="form-control rounded-pill border-0 text-white", type="datetime-local"})
+        @Html.DropDownList("status", (IEnumerable<SelectListItem>)ViewData["Options"],"All", new
+        {
+    @class="form-control rounded-pill border-0 text-white", style="max-width:10%"
+        })
+        <input class="btn rounded-pill btn-secondary " form="myForm-history" type="submit" value="Search">
+       
+    </div>
+}
+<h1>History</h1>
+
+@using (Html.BeginForm("index", "BorrowingHistories", FormMethod.Get, new { @id = "pageSizeFormBorrowingHistories", @class = "form-class", style="margin-bottom:10px"}))
+{
+
+    @Html.Hidden("search",ViewBag.search,new{})
+    @Html.Hidden("date",ViewBag.date,new{})
+    @Html.Hidden("status",ViewBag.status,new{})
+
+    @Html.DropDownList("pageSize", new SelectList(ViewBag.PageSizeOptions, "Value", "Text", ViewBag.onePageOfHistory.PageSize.ToString()), new { onchange = "document.getElementById('pageSizeFormBorrowingHistories').submit()" ,  @class="form-control rounded-pill border-0  ",@style="max-width:10%; color:#b3b3b3"})
+}
+<div id="staticBackdropHistory" class="modal fade"> </div>
+
+<table class="table table-bordered table-dark table-hover " style="margin-bottom:10px">
     <thead>
         <tr>
             <th>
@@ -27,24 +46,100 @@
             <th>
                 @Html.DisplayNameFor(model => model.Borrower)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in ViewBag.onePageOfHistory)
+        {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.BorrowDate)
+                @item.BorrowDate
             </td>
           
             <td>
-                @Html.DisplayFor(modelItem => item.Borrower.BorrowerName)
+                    @item.Borrower.BorrowerName
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.BorrowingHistoryId">Details</a> 
+                    @item.Quantity
+            </td>
+                <td>
+                    @item.Cost.ToString("n0") VNĐ
+                </td>
+            <td>
+                    @(item.Status ? "Open" : "Closed")
+            </td>
+            <td style="width:200px">
+                    <a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.BorrowingHistoryId">Details</a> 
+               
+                 <span>|</span>
+                 <button class="btn btn-secondary btnLoadPartialDeleteHistory" data-id="@item.BorrowingHistoryId">Delete</button>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+@if (TempData["MessageData"] != null)
+{
+    @(await Html.PartialAsync("_ToastPartial", new MessengerViewModel()
+        {
+            Message = TempData["MessageData"].ToString(),
+            Status = TempData["MessageStatus"].ToString()
+        }))
+
+    <script>
+        $(function () {
+            const toastLiveExample = document.getElementById('liveToast')
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            toastBootstrap.show()
+        });
+    </script>
+}
+<div class="d-flex justify-content-between">
+    <div>
+
+        Showing @ViewBag.onePageOfHistory.FirstItemOnPage to @ViewBag.onePageOfHistory.LastItemOnPage of @ViewBag.onePageOfHistory.TotalItemCount entries
+    </div>
+    @if (ViewBag.onePageOfHistory.TotalItemCount > ViewBag.onePageOfHistory.PageSize)
+    {
+        @Html.PagedListPager((IPagedList)ViewBag.onePageOfHistory, page => Url.Action("Index", new { page,ViewBag.search ,ViewBag.status ,ViewBag.date,pageSize=ViewBag.onePageOfHistory.PageSize }) )
+    }
+</div>
+
+
+@section Scripts {
+   
+
+    <script>
+        $(document).ready(function () {
+
+           
+            $(".btnLoadPartialDeleteHistory").on("click", async function () {
+                var itemId = $(this).data("id");
+                // Gọi Ajax để lấy nội dung partial view
+                var result = await $.ajax({
+                    url: "@Url.Action("Delete")",
+                    data: { id: itemId },
+                    type: 'GET'
+                });
+                await $('#staticBackdropHistory').html(result);
+                await $('#staticBackdropHistory').modal('show');
+            });
+
+            $('#staticBackdropHistory').on('hidden.bs.modal', function () {
+                $('.modal-dialog').remove();
+            }); 
+        });
+    </script>
+
 }

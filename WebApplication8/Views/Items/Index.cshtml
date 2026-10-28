@@ -1,84 +1,161 @@
-﻿@model IEnumerable<WebApplication8.Data.Item>
-
+﻿@model IEnumerable<WebApplication8.Models.ItemViewModel>
+@using X.PagedList;
+@using X.PagedList.Mvc.Core
 @{
-    ViewData["Title"] = "Index";
-}
-
-<h1>List Item</h1>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</p>
-<form asp-action="index">
-    <input type="text" name="name" placeholder="search" />
-    <button type="submit">Search</button>
-</form>
-
-@if(Model.Count() == 0)
-{
-      <h1>Nothing Show</h1>
+    ViewData["Title"] = "Items";
   
-} else
-{   
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PublicationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfPages)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RunTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PublicationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfPages)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RunTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ItemId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ItemId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ItemId">Delete</a>
-            </td>
-        </tr>
+    var showDelete = Url.Action("Delete");
+    var showUpdate = Url.Action("Edit");
+    var showDetails = Url.Action("Details");
+   
 }
-    </tbody>
-</table>
+
+
+<div class="d-flex justify-content-between alight-items-center box-search ">
+    
+        @using (Html.BeginForm("index", "Items", FormMethod.Get, new { @class = "form-class" }))
+    {
+        <div class="d-flex gap-1 justify-content-between ">
+            @Html.TextBox("name" ,"",new
+            {
+                @style="max-width:50%", @class="form-control rounded-pill border-0 text-white", @placeholder="Search....."
+
+            })
+            @Html.DropDownList("Category", null,"Select a category", htmlAttributes: new {  @class="form-control rounded-pill border-0  ",@style="max-width:34%; color:#b3b3b3"})
+            @Html.Hidden("pageSize",ViewBag.onePageOfProducts.PageSize,new{})
+
+
+            <button class="btn rounded-pill btn-secondary " type="submit">Search</button>
+        </div>
+    }
+    <div>
+     
+          <button class="btn rounded-pill btn-secondary " id="btnLoadPartialCreate">Create New</button>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-item-center" style="margin-top: 40px;">
+    <h1>Item</h1>
+</div>
+@using (Html.BeginForm("index", "Items", FormMethod.Get, new { @class = "form-class", @id = "pageSizeForm" }))
+{
+    @Html.Hidden("name",ViewBag.nameSearch,new{})
+    @Html.Hidden("Category",ViewBag.categorySearch,new{})
+
+    @Html.DropDownList("pageSize", new SelectList(ViewBag.PageSizeOptions, "Value", "Text", ViewBag.OnePageOfProducts.PageSize.ToString()), new { onchange = "document.getElementById('pageSizeForm').submit()" ,  @class="form-control rounded-pill border-0  ",@style="max-width:10%; color:#b3b3b3"})
+
+}
+
+
+@if (TempData["MessageData"] != null)
+{
+     
+   
+  
+    @(await Html.PartialAsync("_ToastPartial",new MessengerViewModel()
+    {
+        Message = TempData["MessageData"].ToString(),
+        Status = TempData["MessageStatus"].ToString()
+    }))
+    
+    <script>
+        $(function() {
+            const toastLiveExample = document.getElementById('liveToast')
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            toastBootstrap.show()
+        });
+    </script>
+}
+
+
+
+<div id="staticBackdropItem" class="modal fade">
+</div>
+<div class="d-flex mt-2 container-item gap-3 align-items-center flex-wrap mb-2">
+    
+ 
+    @foreach (var item in ViewBag.OnePageOfProducts)
+    {
+
+        <div class="card text-black align-self-stretch shadow-sm  bg-body-tertiary rounded " style="width: 15rem; position: relative; background-color:#181818">
+           
+               <div class="group-svg ">
+                   <button type="button"  class="btnLoadPartialEdit" data-id="@item.ItemId" >
+                       <i class="fa-solid fa-pencil"></i>
+                   </button>
+                   <button type="button" data-id="@item.ItemId" class="btnLoadPartialDelete">
+                       <i class="fa-solid fa-trash"></i>
+                   </button>
+               </div>
+            <div class="btnLoadPartialDetails pb-0 p-3" data-id="@item.ItemId" >
+                <img src="@item.ImageUrl" class="card-img-top " alt="...">
+                </div>
+            <div class="card-body">
+                <h5 class="card-title text-white">@item.Title</h5>
+                <p class="card-text">Category: @item.Category</p>
+                <p class="card-text">Author: @item.Author</p>
+                <p class="card-text">Price: @item.Price.ToString("n0") VNĐ</p>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="d-flex justify-content-between">
+    <div>
+        
+        Showing @ViewBag.OnePageOfProducts.FirstItemOnPage to @ViewBag.OnePageOfProducts.LastItemOnPage of @ViewBag.OnePageOfProducts.TotalItemCount entries
+    </div>
+    @if (ViewBag.OnePageOfProducts.TotalItemCount > ViewBag.OnePageOfProducts.PageSize)
+    {
+    
+        @Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("Index", new { page,name=ViewBag.nameSearch,Category=ViewBag.categorySearch,pageSize=ViewBag.onePageOfProducts.PageSize }) )
+    }
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+
+
+            async function getPartial(url,itemId){
+                var result = await $.ajax({
+                    url:url,
+                    data: { id: itemId },
+                    type: 'GET'
+                });
+                await $('#staticBackdropItem').html(result);
+                await $('#staticBackdropItem').modal('show');
+            } 
+            $(".btnLoadPartialDelete").on("click", async function () {
+                var itemId = $(this).data("id");
+                // Gọi Ajax để lấy nội dung partial view
+                await getPartial('@showDelete', itemId)
+            });
+
+            $('#staticBackdropItem').on('hidden.bs.modal', function () {
+                $('.modal-dialog').remove();
+            });
+
+            $(".btnLoadPartialDetails").on("click", async function () {
+                var itemId = $(this).data("id");
+                // Gọi Ajax để lấy nội dung partial view
+                await getPartial('@showDetails', itemId)
+
+            });
+            $(".btnLoadPartialEdit").on("click", async function () {
+                var itemId = $(this).data("id");
+                await getPartial('@showUpdate', itemId)
+            });
+            $("#btnLoadPartialCreate").on("click", function () {
+                $('#staticBackdropItem').load("@Url.Action("Create")", function () {
+                    $('#staticBackdropItem').modal('show');
+                });
+            });
+
+        });
+    </script>
+
 }

@@ -1,51 +1,254 @@
-﻿@model WebApplication8.Models.BorrowingHistoryView
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model WebApplication8.Models.BorrowingHistoryVmCreate
 
 
 @{
     ViewData["Title"] = "Create";
+    var index = 1;
+    var itemChooseUrl = Url.Action("GetItemChoose");
+    var updateItemBorrow = Url.Action("UpdateItemChoose");
+    var deleteItemBorrow = Url.Action("RemoveItemBorrow");
+    var addItemBorrow = Url.Action("AddItemToList");
+
+    
   
+}
+@using (Html.BeginForm("Create", "BorrowingHistories", FormMethod.Get, new { @class = "form-class box-search" }))
+{
+    <div class="d-flex gap-1  ">
+        @Html.TextBox("name" ,"",new
+        {
+            @style="max-width:20%", @class="form-control rounded-pill border-0 text-white", @placeholder="Search....."
+
+        })
+        <button class="btn rounded-pill btn-secondary " type="submit">Search</button>
+
+    </div>
 }
 
 <h1>Borrow</h1>
 
-<hr />
+
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label  class="control-label">Choose Borrower</label>
+    
+    <div class="col">
+        <div class="background-secondary container-table  ">
+            <h1>Select Item</h1>
 
-                <select class="form-control" name="BorrowerId">
-                    @foreach (var item in Model.Borrowers)
+            <table class="table table-bordered table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Items.GetEnumerator().Current.Title)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Items.GetEnumerator().Current.Author)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Items.GetEnumerator().Current.Category)
+
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Items.GetEnumerator().Current.Quantity)
+
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Items.GetEnumerator().Current.Price)
+
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.onePageOfItems)
                     {
-                        <option value="@item.BorrowerId">@item.BorrowerName</option>
+                        <tr>
+                            <th scope="row">@index</th>
+                            <td>
+                                @item.Title
+                            </td>
+
+                            <td>
+                                @item.Author
+                            </td>
+                            <td>
+                                @item.Category
+                            </td>
+                            <td>
+                                @item.AvailableQuantity
+                            </td>
+                            <td>
+                                @item.Price.ToString("n0") VNĐ
+                            </td>
+                            <td>
+                                <button class="btn btn-secondary addItem" data-id="@item.ItemId">+</button>
+
+                            </td>
+                        </tr>
+                        index++;
                     }
-                </select>
-                <span asp-validation-for="BorrowerId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label  class="control-label"> Slelect Item</label>
-                <select name="ItemId" class="form-control" multiple>
-                    @foreach (var item in Model.Items)
-                    {
-                        <option name="ItemId" value="@item.ItemId">@item.Title - @item.Category</option>
-                    }
-                </select>
-                <span asp-validation-for="ItemId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-          
-        </form>
+                </tbody>
+            </table>
+            @if(ViewBag.itemCount > 7){
+            @Html.PagedListPager((IPagedList)ViewBag.onePageOfItems, page => Url.Action("Create", new { page, name = ViewBag.nameSearch }))
+            }
+        
+
+        </div>
+        @Html.AntiForgeryToken()
     </div>
-</div>
+    <div class="col">
+        <div class="col container-table background-secondary ">
+            <h1>Bill</h1>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+
+            @using (Html.BeginForm("Create", "BorrowingHistories", FormMethod.Post, new { @class = "form-class", @id = "form-borrow" }))
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Borrowers, htmlAttributes: new { @class = "control-label" }):
+                    @Html.DropDownListFor(m => m.BorrowerId,
+                new SelectList(Model.Borrowers, "BorrowerId", "BorrowerName"),
+                "-- Select a borrower --",
+                new { @class = "form-select text-white" })
+                </div>
+            }
+            <hr />
+            <div class="d-flex flex-column justify-content-between " style="min-height: 50vh">
+                
+                <table  class="table table-bordered table-dark table-hover">
+                    <thead>
+                    <tr>
+
+                        <th scope="col" style="width:190px">
+                            @Html.DisplayNameFor(model => model.Items.GetEnumerator().Current.Title)
+
+                        </th>
+                        <th scope="col" style="width:70px">
+                            @Html.DisplayNameFor(model => model.Items.GetEnumerator().Current.Author)
+
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Items.GetEnumerator().Current.Price)
+
+                        </th>
+                        <th scope="col" style="width:70px">
+                            @Html.DisplayNameFor(model => model.Items.GetEnumerator().Current.Quantity)
+                        </th>
+                        <th scope="col">
+                            Cost
+                        </th>
+                        <th scope="col" style="width:40px">
+
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="product-table-body"></tbody>
+                </table>
+                <div>
+                    <hr/>
+                    <div>
+                        Cost:
+                        <span id="sumCost"></span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-secondary btn-submitBorrow" disabled="disabled" form="form-borrow" type="submit">Apply</button>
+        </div>
+
+    </div>
+
+
 </div>
+@if (TempData["MessageData"] != null)
+{
+
+
+
+    @(await Html.PartialAsync("_ToastPartial", new MessengerViewModel()
+    {
+        Message = TempData["MessageData"].ToString(),
+        Status = TempData["MessageStatus"].ToString()
+    }))
+
+    <script>
+        $(function () {
+            const toastLiveExample = document.getElementById('liveToast')
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            toastBootstrap.show()
+        });
+    </script>
+}
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+    
+            $(".addItem").on("click",  function () {
+                var itemId = $(this).data("id");
+                // Gọi Ajax để lấy nội dung partial view
+                getItemBorrow('@addItemBorrow','POST', itemId)
+            });
+            $(document).on('click', '.removeChooseItem', function () {
+                // Xử lý sự kiện click
+                var itemId = $(this).data("id");
+                getItemBorrow('@deleteItemBorrow','DELETE', itemId)          
+            });
+            $(document).on('change', '.inputQuantity', function () {
+                // Xử lý sự kiện click
+                var itemId = $(this).data("id");
+                const maxVal = $(this).attr('max');
+                var newValue = $(this).val();
+                if (newValue > parseInt(maxVal)) {
+                    newValue = maxVal
+                    $(this).val(maxVal)
+                }
+                if (newValue <= 0) {
+                    newValue = 1
+                    $(this).val(1)
+                }
+                getItemBorrow('@updateItemBorrow','PUT', itemId, newValue)           
+            });
+             function getItem(data) {
+                var sumCost = 0;
+                $("#product-table-body tr").remove();
+                data.map(function (product) {
+                    var defaultVal = product.quantity;
+                    var rowHtml = "<tr>";
+                    rowHtml += "<td>" + product.item.title + "</td>";
+                    rowHtml += "<td>" + product.item.author + "</td>";
+                    rowHtml += "<td>" + product.item.price.toLocaleString() + "VNĐ" + "</td>";
+                    rowHtml += "<td><input class='inputQuantity form-control' min='1' max='" + product.item.availableQuantity + "' data-id='" + product.itemId + "' value='" + product.quantity + "' type='number'></td>";
+                    rowHtml += "<td>" + product.cost.toLocaleString() + "VNĐ" + "</td>";
+                    rowHtml += "<td><button class='btn btn-secondary removeChooseItem' data-id='" + product.itemId + "'  >" + "-" + "</button></td>";
+                    rowHtml += "</tr>";
+                    $("#product-table-body").append(rowHtml);
+                    sumCost = sumCost + product.cost
+                });
+                $("#sumCost").text(`${sumCost.toLocaleString()} VNĐ `)
+                if (data.length > 0) $(".btn-submitBorrow").removeAttr('disabled')
+                else $(".btn-submitBorrow").attr('disabled', 'disabled')
+            }
+    
+            function getItemBorrow(url,type,itemId,quantity){
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                $.ajax({
+                    url:url,
+                    data: { __RequestVerificationToken: token, itemId: itemId, quantity: quantity },
+                    type: type,
+                    success: function (data) {
+                        getItem(data);
+                    },
+                });
+            }
+            getItemBorrow('@itemChooseUrl','GET');
+    
+        });
+    </script>
+
 }

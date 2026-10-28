@@ -5,7 +5,7 @@ namespace WebApplication8.Data
     public class MyDbContext : DbContext
     {
 
-  
+
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
         }
@@ -13,28 +13,29 @@ namespace WebApplication8.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<Borrower> Borrowers { get; set; }
         public DbSet<BorrowingHistory> BorrowingHistories { get; set; }
-
+        public DbSet<HistoryDetail> HistoryDetails { get; set; }
+        public DbSet<User> Users { get; set; }
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
-            modelBuilder.Entity<HistoryDetail>(entity =>
-            {
-                entity.HasOne(b => b.BorrowingHistory)
-                    .WithMany(b => b.HistoryDetails)
-                    .HasForeignKey(b => b.BorrowingHistoryId);
-                entity.HasOne(b => b.Item)
-                    .WithMany(b => b.HistoryDetails)
-                    .HasForeignKey(b => b.ItemId);
-            });
-            modelBuilder.Entity<BorrowingHistory>()
-                .HasOne(b => b.Borrower)
-                .WithMany(b => b.BorrowingHistories)
-                .HasForeignKey(b => b.BorrowerId);
+
+            //modelBuilder.Entity<HistoryDetail>(entity =>
+            //{
+            //    entity.HasOne(b => b.BorrowingHistory)
+            //        .WithMany(b => b.HistoryDetails)
+            //        .HasForeignKey(b => b.BorrowingHistoryId);
+            //    entity.HasOne(b => b.Item)
+            //        .WithMany(b => b.HistoryDetails)
+            //        .HasForeignKey(b => b.ItemId);
+            //});
+            //modelBuilder.Entity<BorrowingHistory>()
+            //    .HasOne(b => b.Borrower)
+            //    .WithMany(b => b.BorrowingHistories)
+            //    .HasForeignKey(b => b.BorrowerId);
         }
-        
 
 
-      
+
+
     }
 }

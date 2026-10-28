@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication8.Data
 {
@@ -12,7 +11,7 @@ namespace WebApplication8.Data
             Magazine
         }
         [Key]
-        public Guid ItemId { get; set; }
+        public int ItemId { get; set; }
         [Required]
         [StringLength(200)]
         public string Title { get; set; }
@@ -24,11 +23,19 @@ namespace WebApplication8.Data
         public double Price { get; set; }
         public int? NumberOfPages { get; set; }
         public string? RunTime { get; set; }
+        public string ImageUrl { get; set; }
+        [Range(0, int.MaxValue)]
+
+        public int Quantity { get; set; }
+
+        public int AvailableQuantity { get; set; }
         public CategoryName Category { get; set; }
         public ICollection<HistoryDetail>? HistoryDetails { get; set; }
 
 
-      
+
+
+
 
 
     }

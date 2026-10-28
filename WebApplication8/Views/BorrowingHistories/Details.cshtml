@@ -1,20 +1,19 @@
-﻿@model WebApplication8.Data.BorrowingHistory
+﻿@model WebApplication8.Models.BorrowingHistoryVm
 
 @{
     ViewData["Title"] = "Details";
-    double sum = 0;
-    foreach(var item in Model.HistoryDetails)
-    {
-        Console.WriteLine(item.Cost);
-        sum = sum + item.Cost;
-    }
+    var httpContext = ViewContext.HttpContext;
+    var user = httpContext.Session.GetString("userName");
   
 }
 
-<h1>Details</h1>
+<h1>
+    <a style="color:#b3b3b3" asp-action="Index"><</a> Details
+</h1>
 
 <div>
-    <h4>BorrowingHistory</h4>
+    
+  
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -31,28 +30,58 @@
             @Html.DisplayFor(model => model.Borrower.BorrowerName)
         </dd>
         <dt class="col-sm-2">
-             Cost 
+            @Html.DisplayNameFor(model => model.Cost)
+
         </dt>
         <dd class="col-sm-10">
-           $@sum 
+            @Model.Cost.ToString("n0") VNĐ
+
         </dd>
+       
+
     </dl>
+    <div class="d-flex justify-content-between">
+        @if (Model.Status && user != null)
+        {
+            <button class="btn btnReturnAll btn-secondary" style="max-width=50px;" data-idBorrow="@Model.BorrowingHistoryId">Return All</button>
+
+        }
+    </div>
     <hr />
-    <table class="table">
+    <div id="staticBackdropReturn" class="modal fade" > </div>
+
+    <table class="table table-bordered table-dark table-hover">
         <thead>
             <tr>
                 <th>
-                    Title
+                    @Html.DisplayNameFor(model => model.HistoryDetails.GetEnumerator().Current.Item.Title)
                 </th>
                 <th>
-                    Author
+                    @Html.DisplayNameFor(model => model.HistoryDetails.GetEnumerator().Current.Item.Author)
+
                 </th>
                 <th>
-                    Price
+                    @Html.DisplayNameFor(model => model.HistoryDetails.GetEnumerator().Current.Item.Category)
+
                 </th>
                 <th>
-                    Category
+                    @Html.DisplayNameFor(model => model.HistoryDetails.GetEnumerator().Current.Item.Quantity)
+
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HistoryDetails.GetEnumerator().Current.Item.Price)
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HistoryDetails.GetEnumerator().Current.Cost)
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HistoryDetails.GetEnumerator().Current.Status)
+
+                </th>
+                
+
                 <th></th>
             </tr>
         </thead>
@@ -67,18 +96,87 @@
                         @Html.DisplayFor(modelItem => item.Item.Author)
                     </td>
                     <td>
-                        $@Html.DisplayFor(modelItem =>item.Item.Price)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Item.Category)
                     </td>                                   
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @item.Item.Price.ToString("n0") VNĐ
+                    </td>
+                    <td>
+                        @item.Cost.ToString("n0") VNĐ
+
+                    </td>
+                    <td >
+                        @(item.Status ? "Open" : "Closed")
+                    </td>
+                    <td>
+                        @if (item.Status && user != null)
+                       {
+                           <button class="btn btnReturn btn-secondary" data-idBorrow="@Model.BorrowingHistoryId" data-id="@item.HistoryDetailId">Return</button>
+                       }
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
     
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.BorrowingHistoryId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+@if (TempData["MessageData"] != null)
+{
+
+
+
+    @(await Html.PartialAsync("_ToastPartial", new MessengerViewModel()
+    {
+        Message = TempData["MessageData"].ToString(),
+        Status = TempData["MessageStatus"].ToString()
+    }))
+
+    <script>
+        $(function () {
+            const toastLiveExample = document.getElementById('liveToast')
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            toastBootstrap.show()
+        });
+    </script>
+}             
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".btnReturn").on("click", function () {
+                var idBorrowingHistory = $(this).data("idborrow")
+                var idHistoryDetails = $(this).data("id")
+                returnItem(idBorrowingHistory, idHistoryDetails)
+               
+            });
+           
+            $(".btnReturnAll").on("click", function () {
+                var idBorrowingHistory = $(this).data("idborrow")           
+                returnItem(idBorrowingHistory, null)
+            });
+            function returnItem(idBorrowingHistory, idHistoryDetails) {
+                // Gọi Ajax để lấy nội dung partial view
+                $.ajax({
+                    url: "@Url.Action("ReturnItemPartial")",
+                    data: {
+                        idBorrowingHistory: idBorrowingHistory,
+                        idHistoryDetails: idHistoryDetails
+                    },
+                    type: 'GET',
+                    success: function (result) {
+                        $('#staticBackdropReturn').html(result);
+                         $('#staticBackdropReturn').modal('show');
+                    },
+                });
+            }
+            $('#staticBackdropReturn').on('hidden.bs.modal', function () {
+                $('.modal-dialog').remove();
+            });
+        });
+    </script>
+
+}
